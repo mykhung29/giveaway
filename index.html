@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giveaway 1:64</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e10600;
+    --red-glow: rgba(225, 6, 0, 0.45);
+    --white: #ffffff;
+    --grey: #8c8c8c;
+    --line: rgba(255, 255, 255, 0.12);
+    --black: #0a0a0a;
+    --panel: #141414;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--black); }
+  body {
+    height: 100vh; height: 100dvh;
+    overflow: hidden;
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* Nền: lưới mờ + quầng đỏ */
+  .bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 42%, rgba(225, 6, 0, 0.16), transparent 70%),
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 64px 64px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 85%);
+  }
+
+  .page {
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(14px, 3vh, 32px) 24px clamp(14px, 3vh, 28px);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .page > * { flex-shrink: 0; }
+
+  /* Thanh trên */
+  .topbar {
+    width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--grey);
+  }
+  .topbar .brand { display: flex; align-items: center; gap: 12px; }
+  .topbar .brand::before { content: ""; width: 6px; height: 24px; background: var(--red); }
+  .topbar .brand b { color: var(--white); }
+  .live {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+  .live i {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 0 var(--red-glow);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 var(--red-glow); }
+    100% { box-shadow: 0 0 0 12px rgba(225, 6, 0, 0); }
+  }
+
+  /* Tiêu đề */
+  .title-wrap { position: relative; margin-top: clamp(4px, 1.5vh, 16px); text-align: center; }
+  .title {
+    font-family: "Anton", sans-serif;
+    font-size: min(15vw, 13vh, 150px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #fff 55%, #9a9a9a 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    display: inline-block;
+    margin-top: 1vh;
+    padding: 0.32em 0.62em 0.2em 0.42em;
+    background: var(--red);
+    font-weight: 900; font-style: italic;
+    font-size: min(5vw, 3.2vh, 28px);
+    line-height: 1.12;
+    transform: skewX(-8deg);
+    box-shadow: 0 10px 30px var(--red-glow);
+  }
+  .sub span { display: inline-block; transform: skewX(8deg); }
+
+  /* Slider */
+  .slider {
+    position: relative;
+    width: 100%;
+    flex: 1 1 0; min-height: 0;
+    margin-top: clamp(10px, 2.5vh, 28px);
+    display: flex;
+    justify-content: center;
+  }
+  .frame {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    max-width: calc(100% - 180px);
+  }
+  .stage {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity .6s ease, transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .slide.active { opacity: 1; transform: scale(1); }
+  /* Nền mờ cùng ảnh để ảnh dọc vẫn lấp đầy khung */
+  .slide .blur {
+    position: absolute; inset: -40px;
+    background-size: cover; background-position: center;
+    filter: blur(36px) brightness(0.45) saturate(1.2);
+  }
+  .slide img {
+    position: relative;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .counter {
+    position: absolute; right: 18px; bottom: 16px; z-index: 2;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    font-family: "Anton", sans-serif;
+    font-size: 18px; line-height: 1;
+    color: var(--white);
+  }
+  .counter span { color: var(--grey); font-size: 14px; }
+
+  .progress {
+    position: absolute; left: 0; top: 0; z-index: 3;
+    height: 3px; width: 0;
+    background: var(--red);
+    box-shadow: 0 0 12px var(--red);
+  }
+
+  /* Mũi tên: hình bình hành nghiêng giống nhãn đỏ */
+  .arrow {
+    position: absolute; top: 50%; z-index: 4;
+    width: 58px; height: 58px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: linear-gradient(180deg, #1c1c1c, #111);
+    color: var(--white);
+    cursor: pointer;
+    transform: translateY(-50%) skewX(-8deg);
+    transition: background .2s, border-color .2s, box-shadow .2s, transform .2s;
+  }
+  .arrow.prev { left: -88px; }
+  .arrow.next { right: -88px; }
+  .arrow svg {
+    width: 24px; height: 24px;
+    transform: skewX(8deg);
+    transition: transform .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .arrow:hover {
+    background: var(--red); border-color: var(--red);
+    box-shadow: 0 10px 30px var(--red-glow);
+  }
+  .arrow.prev:hover svg { transform: skewX(8deg) translateX(-3px); }
+  .arrow.next:hover svg { transform: skewX(8deg) translateX(3px); }
+  .arrow:active { transform: translateY(-50%) skewX(-8deg) scale(0.94); }
+  .arrow:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+
+  .dots { display: flex; gap: 8px; justify-content: center; margin-top: clamp(8px, 1.6vh, 16px); }
+  .dot {
+    width: 10px; height: 10px; border-radius: 999px;
+    border: 0; background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: width .3s, background .3s;
+  }
+  .dot.active { width: 34px; background: var(--red); }
+
+  /* Text dưới */
+  .info { max-width: 760px; margin-top: clamp(8px, 2vh, 22px); text-align: center; }
+  .prizes { font-size: clamp(14px, 2.2vh, 20px); line-height: 1.5; color: #d9d9d9; }
+  .prizes strong { color: var(--white); font-weight: 800; }
+  .prizes .hl { color: var(--red); font-weight: 900; }
+
+  .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: clamp(8px, 1.6vh, 16px); }
+  .tags li {
+    list-style: none;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px; font-weight: 700;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: clamp(10px, 2vh, 20px); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: clamp(10px, 1.6vh, 14px) 28px;
+    border: 2px solid var(--white);
+    border-radius: 999px;
+    font-weight: 800; font-size: 15px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); text-decoration: none;
+    transition: transform .15s, background .15s, color .15s, border-color .15s, box-shadow .15s;
+  }
+  .chip svg { width: 20px; height: 20px; }
+  .chip.solid { background: var(--white); color: var(--black); }
+  .chip:hover { transform: translateY(-3px); }
+  .chip.solid:hover { box-shadow: 0 12px 30px rgba(255,255,255,0.2); }
+
+  .cta { margin-top: clamp(8px, 1.6vh, 16px); font-size: clamp(13px, 1.8vh, 15px); line-height: 1.5; color: var(--grey); }
+
+  /* Hiện dần khi tải trang */
+  .reveal { opacity: 0; transform: translateY(18px); animation: in .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  .d1 { animation-delay: .05s; } .d2 { animation-delay: .15s; } .d3 { animation-delay: .3s; } .d4 { animation-delay: .45s; }
+  @keyframes in { to { opacity: 1; transform: none; } }
+
+  /* Điện thoại: mũi tên nằm đè lên ảnh */
+  @media (max-width: 720px) {
+    .page { padding: 14px 16px 16px; }
+    .topbar { font-size: 11px; letter-spacing: 2px; }
+    .frame { max-width: 100%; }
+    .stage { border-radius: 16px; }
+    .arrow {
+      width: 42px; height: 42px;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(6px);
+    }
+    .arrow.prev { left: 12px; }
+    .arrow.next { right: 12px; }
+    .arrow svg { width: 20px; height: 20px; }
+    .counter { right: 12px; bottom: 12px; }
+    .chip { padding: 11px 24px; font-size: 13px; }
+    .prizes { font-size: 14px; }
+  }
+
+  /* Màn hình thấp: bớt phần phụ để ảnh không bị quá nhỏ */
+  @media (max-height: 760px) {
+    .tags { display: none; }
+  }
+  @media (max-height: 560px) {
+    .cta, .topbar { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <main class="page">
+    <header class="topbar reveal d1">
+      <div class="brand"><b>Diecast</b> · 1:64</div>
+      <div class="live"><i></i>Coming soon</div>
+    </header>
+
+    <div class="title-wrap reveal d2">
+      <h1 class="title">Giveaway</h1>
+      <div class="sub"><span>COMING SOON!</span></div>
+    </div>
+
+    <section class="slider reveal d3" aria-roledescription="carousel" aria-label="Ảnh mô hình xe">
+      <div class="frame">
+      <button class="arrow prev" type="button" aria-label="Ảnh trước">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+
+      <div class="stage">
+        <div class="progress"></div>
+        <!-- Các slide được tạo từ mảng SLIDES bên dưới -->
+      </div>
+
+      <button class="arrow next" type="button" aria-label="Ảnh tiếp theo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+      </div>
+    </section>
+
+    <div class="dots" role="tablist" aria-label="Chọn ảnh"></div>
+
+    <section class="info reveal d4">
+      <p class="prizes">
+        Sắp tới mình có <span class="hl">GIVEAWAY</span> với quà là
+        <strong>mô&nbsp;hình&nbsp;xe&nbsp;1:64</strong>, <strong>áo</strong> và
+        <strong>các&nbsp;phụ&nbsp;kiện</strong> liên quan đến xe nha!
+      </p>
+
+      <ul class="tags">
+        <li>🚗 Mô hình 1:64</li>
+        <li>👕 Áo</li>
+        <li>🎁 Phụ kiện xe</li>
+      </ul>
+
+      <div class="chips">
+        <a class="chip solid" href="#" data-tiktok target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Follow
+        </a>
+      </div>
+
+      <p class="cta">Follow để không bỏ lỡ nhaaa!</p>
+    </section>
+  </main>
+
+  <script>
+    // Đổi thành link kênh TikTok của bạn
+    const TIKTOK_URL = "https://www.tiktok.com/@your_channel";
+
+    const IMG = "assets/images/";
+    const SLIDES = [
+      { src: IMG + "nissan-s15-pink.jpg", name: "Nissan Silvia S15 LB-Super Silhouette" },
+      { src: IMG + "gtr-lbwk-blue.jpg", name: "Nissan GT-R LBWK xanh" },
+      { src: IMG + "huracan-lbwk-green.jpg", name: "Lamborghini Huracán LB-Silhouette xanh lá" },
+      { src: IMG + "bmw-m4-gt3.jpg", name: "BMW M4 GT3" },
+      { src: IMG + "huracan-gt3-pink.jpg", name: "Lamborghini Huracán GT3 EVO2 Iron Dames" },
+      { src: IMG + "gtr-pink-diorama.jpg", name: "Dàn Nissan GT-R hồng trong diorama" },
+      { src: IMG + "porsche-911-gt3r.jpg", name: "Porsche 911 GT3 R" },
+      { src: IMG + "nissan-s15-kuma.jpg", name: "Nissan Silvia S15 LBWK Kuma" },
+      { src: IMG + "minigt-lineup.jpg", name: "Các mẫu MINI GT 1:64" },
+      { src: IMG + "hotwheels-wall.jpg", name: "Kệ Hot Wheels" },
+    ];
+    const AUTOPLAY_MS = 4500;
+
+    document.querySelectorAll("[data-tiktok]").forEach(a => a.href = TIKTOK_URL);
+
+    const stage = document.querySelector(".stage");
+    const dotsEl = document.querySelector(".dots");
+    const progress = document.querySelector(".progress");
+    const pad = n => String(n).padStart(2, "0");
+
+    const slides = SLIDES.map((s, i) => {
+      const el = document.createElement("div");
+      el.className = "slide";
+      el.setAttribute("aria-hidden", "true");
+      el.innerHTML = `
+        <div class="blur" style="background-image:url('${s.src}')"></div>
+        <img src="${s.src}" alt="${s.name}" draggable="false">
+        <div class="counter">${pad(i + 1)}<span> / ${pad(SLIDES.length)}</span></div>`;
+      stage.appendChild(el);
+
+      const dot = document.createElement("button");
+      dot.className = "dot";
+      dot.type = "button";
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", `Ảnh ${i + 1}`);
+      dot.addEventListener("click", () => go(i));
+      dotsEl.appendChild(dot);
+      return { el, dot };
+    });
+
+    let current = 0;
+    let timer = null;
+
+    function go(i) {
+      slides[current].el.classList.remove("active");
+      slides[current].el.setAttribute("aria-hidden", "true");
+      slides[current].dot.classList.remove("active");
+      current = (i + slides.length) % slides.length;
+      slides[current].el.classList.add("active");
+      slides[current].el.setAttribute("aria-hidden", "false");
+      slides[current].dot.classList.add("active");
+      restart();
+    }
+
+    // Thanh tiến trình chạy theo thời gian tự chuyển ảnh
+    function restart() {
+      clearTimeout(timer);
+      progress.style.transition = "none";
+      progress.style.width = "0";
+      void progress.offsetWidth;
+      if (paused) return;
+      progress.style.transition = `width ${AUTOPLAY_MS}ms linear`;
+      progress.style.width = "100%";
+      timer = setTimeout(() => go(current + 1), AUTOPLAY_MS);
+    }
+
+    let paused = false;
+    stage.addEventListener("mouseenter", () => { paused = true; restart(); });
+    stage.addEventListener("mouseleave", () => { paused = false; restart(); });
+
+    document.querySelector(".prev").addEventListener("click", () => go(current - 1));
+    document.querySelector(".next").addEventListener("click", () => go(current + 1));
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") go(current - 1);
+      if (e.key === "ArrowRight") go(current + 1);
+    });
+
+    // Vuốt trên điện thoại
+    let startX = null;
+    stage.addEventListener("pointerdown", e => { startX = e.clientX; });
+    stage.addEventListener("pointerup", e => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
+      startX = null;
+    });
+
+    go(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Giveaway Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:ital,wght@0,500;0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e10600;
+    --white: #ffffff;
+    --grey: #9a9a9a;
+    --black: #0a0a0a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #000; }
+  body { display: flex; justify-content: center; }
+
+  .poster {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: var(--black);
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: var(--white);
+  }
+
+  /* Ảnh chủ thể */
+  .hero {
+    position: absolute;
+    left: 0; right: 0;
+    top: 300px;
+    height: 1200px;
+  }
+  .hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+    filter: contrast(1.06) saturate(0.95) brightness(0.92);
+  }
+  /* Hòa ảnh vào nền đen ở trên và dưới */
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, var(--black) 0%, rgba(10,10,10,0) 22%),
+      linear-gradient(to top, var(--black) 6%, rgba(10,10,10,0.85) 26%, rgba(10,10,10,0) 48%),
+      linear-gradient(to left, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0) 30%),
+      radial-gradient(ellipse at 45% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%);
+  }
+
+  /* Vạch đỏ dọc kiểu racing */
+  .stripe {
+    position: absolute;
+    left: 72px; top: 150px;
+    width: 10px; height: 96px;
+    background: var(--red);
+  }
+
+  /* Phần tiêu đề */
+  .head {
+    position: absolute;
+    left: 72px; right: 72px;
+    top: 150px;
+  }
+  .tag {
+    display: flex; align-items: center; gap: 18px;
+    padding-left: 34px;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--grey);
+    height: 96px;
+  }
+  .tag b { color: var(--white); font-weight: 800; }
+  .title {
+    margin-top: 26px;
+    font-family: "Anton", sans-serif;
+    font-size: 252px;
+    line-height: 0.92;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .sub {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 12px 26px 14px;
+    background: var(--red);
+    font-weight: 900;
+    font-style: italic;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: 1px;
+    transform: skewX(-8deg);
+  }
+  .sub span { display: inline-block; transform: skewX(8deg); }
+
+  /* Phần nội dung dưới */
+  .body {
+    position: absolute;
+    left: 72px; right: 150px;
+    top: 1300px;
+  }
+  .prizes {
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 1.42;
+    color: #e6e6e6;
+  }
+  .prizes strong { color: var(--white); font-weight: 800; }
+  .prizes .hl { color: var(--red); font-weight: 900; }
+
+  .chips {
+    display: flex; gap: 16px;
+    margin-top: 34px;
+  }
+  .chip {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 28px;
+    border: 3px solid var(--white);
+    font-weight: 800;
+    font-size: 32px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .chip.solid { background: var(--white); color: var(--black); }
+  .chip svg { width: 32px; height: 32px; }
+
+  .cta {
+    margin-top: 30px;
+    font-weight: 500;
+    font-size: 34px;
+    line-height: 1.45;
+    color: #bdbdbd;
+  }
+
+  .scale {
+    position: absolute;
+    right: 72px; top: 150px;
+    height: 96px;
+    display: flex; align-items: center;
+    font-family: "Anton", sans-serif;
+    font-size: 54px;
+    color: var(--white);
+    opacity: 0.9;
+  }
+  .scale i { font-style: normal; color: var(--red); margin: 0 4px; }
+
+  /* Nhãn đỏ: chừa chỗ cho dấu tiếng Việt và phần nghiêng của chữ */
+  .sub { padding: 0.32em 0.62em 0.2em 0.42em; line-height: 1.12; }
+
+  /* Nút bấm (bản web) */
+  a.chip { color: inherit; text-decoration: none; cursor: pointer; transition: transform .15s, background .15s, color .15s; }
+  a.chip:hover { transform: translateY(-3px); }
+  a.chip:not(.solid):hover { background: var(--red); border-color: var(--red); }
+  a.chip:not(.solid):hover svg { fill: var(--white); }
+
+  /* Dòng kêu gọi (bản ảnh) */
+  .follow-line {
+    display: block;
+    margin-top: 0.8em;
+    padding-left: 0.5em;
+    border-left: 0.2em solid var(--red);
+    font-weight: 900;
+    font-size: 40px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .follow-line em { font-style: normal; color: var(--red); }
+  html.export .chips { display: none; }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <div class="hero">
+      <img src="../assets/images/nissan-s15-pink.jpg" alt="Mô hình Nissan Silvia S15 MINI GT tỷ lệ 1:64">
+    </div>
+
+    <div class="stripe"></div>
+    <div class="scale">1<i>:</i>64</div>
+
+    <div class="head">
+      <div class="tag"><b>Diecast</b> · Cars · Community</div>
+      <h1 class="title">Giveaway</h1>
+      <div class="sub"><span>COMING SOON!</span></div>
+    </div>
+
+    <div class="body">
+      <p class="prizes">
+        Sắp tới mình có <span class="hl">GIVEAWAY</span> với quà là
+        <strong>mô&nbsp;hình&nbsp;xe&nbsp;1:64</strong>, <strong>áo</strong> và
+        <strong>các&nbsp;phụ&nbsp;kiện</strong> liên quan đến xe nha!
+      </p>
+
+      <div class="chips">
+        <a class="chip solid" href="#" data-tiktok target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Follow
+        </a>
+        <a class="chip" href="#" data-tiktok target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="#e10600"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.1 5.2 3 1.6-1.9 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>
+          Thả tim
+        </a>
+      </div>
+      <p class="follow-line"><em>Follow</em> để không bỏ lỡ nhaaa!</p>
+    </div>
+  </div>
+  <script>
+    // Đổi thành link kênh TikTok của bạn
+    const TIKTOK_URL = "https://www.tiktok.com/@your_channel";
+
+    document.querySelectorAll("[data-tiktok]").forEach(a => a.href = TIKTOK_URL);
+    // Thêm ?export vào URL khi chụp ảnh: ẩn nút, chỉ hiện dòng chữ
+    if (new URLSearchParams(location.search).has("export")) {
+      document.documentElement.classList.add("export");
+    }
+  </script>
+</body>
+</html>
