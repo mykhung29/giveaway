@@ -271,6 +271,16 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .reveal { opacity: 1; transform: none; }
   }
+
+  /* Tag kênh nhỏ dưới cùng */
+  .handle {
+    margin-top: clamp(8px, 1.6vh, 16px);
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .handle:hover { color: var(--white); }
 </style>
 </head>
 <body>
@@ -328,6 +338,8 @@
 
       <p class="cta">Follow để không bỏ lỡ nhaaa!</p>
     </section>
+
+    <a class="handle" href="#" data-tiktok target="_blank" rel="noopener">@locket.car.29</a>
   </main>
 
   <script>
